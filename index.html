@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redirect or Press & Hold</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            height: 100vh;
+            text-align: center;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+
+        /* Стили для Android */
+        .android-container {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(to right bottom, rgb(26, 32, 44), rgb(74, 29, 150), rgb(91, 33, 182));
+            color: #fff;
+            height: 100vh;
+            padding: 20px;
+        }
+        .android-container .button-container {
+            margin-bottom: 20px;
+        }
+        .android-container button {
+            padding: 1rem 2rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+            background-color: #ffffff;
+            color: #4A1D96;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            max-width: 300px;
+            transition: all 0.3s ease;
+        }
+        .android-container button:hover {
+            background-color: #EDE7F6;
+            color: #321E75;
+        }
+
+        /* Стили для iOS */
+        .ios-container {
+            display: none;
+            position: relative;
+            height: 100vh;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(to right bottom, rgb(26, 32, 44), rgb(74, 29, 150), rgb(91, 33, 182));
+            color: #fff;
+        }
+        .ios-container h2 {
+            font-size: 32px; /* Уменьшил с 64px до 40px */
+            margin-bottom: 10px;
+            padding: 10px;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+        .ios-container p {
+            font-size: 18px; /* Уменьшил с 48px до 24px */
+            margin-bottom: 10px;
+            padding: 10px;
+        }
+        .ios-container .fingerprint {
+            width: 100%;
+            max-width: 150px; /* Уменьшил с 600px до 300px */
+            height: auto;
+            cursor: pointer;
+        }
+
+        /* Адаптивность для маленьких экранов */
+        @media (max-width: 400px) {
+            .ios-container h2 {
+                font-size: 24px; /* Ещё меньше на маленьких экранах */
+            }
+            .ios-container p {
+                font-size: 14px; /* Ещё меньше на маленьких экранах */
+            }
+            .ios-container .fingerprint {
+                max-width: 150px; /* Ещё меньше на маленьких экранах */
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Контейнер для Android -->
+    <div class="android-container" id="androidContainer">
+        <div class="button-container">
+            <button onclick="openLink()">ВІДКРИТИ САЙТ</button>
+        </div>
+    </div>
+
+    <!-- Контейнер для iOS -->
+    <div class="ios-container" id="iosContainer">
+        <h2 id="title">УТРИМУЙТЕ ПАЛЕЦЬ НА КАРТИНЦІ⬇️⬇️!</h2>
+        <p id="content">ВИБЕРІТЬ <b>"*ВІДКРИТИ ПОСИЛАННЯ*"</b></p>
+        <a href="https://prev.affomelody.com/WurFvi" target="_blank">
+            <img class="fingerprint" src="https://rinni11.github.io/44/1.png" alt="Отпечаток пальца">
+        </a>
+    </div>
+
+    <script>
+        // Распознавание ОС
+        const isAndroid = /android/i.test(navigator.userAgent);
+        const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+
+        // Элементы страницы
+        const androidContainer = document.getElementById('androidContainer');
+        const iosContainer = document.getElementById('iosContainer');
+
+        // Показываем нужный контейнер в зависимости от ОС
+        if (isAndroid) {
+            androidContainer.style.display = 'flex';
+            iosContainer.style.display = 'none';
+        } else if (isIOS) {
+            androidContainer.style.display = 'none';
+            iosContainer.style.display = 'flex';
+        } else {
+            // Для других устройств (например, десктоп) показываем iOS-версию
+            androidContainer.style.display = 'none';
+            iosContainer.style.display = 'flex';
+        }
+
+        // Функция для Android
+        const targetUrl = "https://prev.affomelody.com/WurFvi";
+
+        const openLink = () => {
+            let formattedUrl = targetUrl;
+            if (!targetUrl.startsWith("https://") && !targetUrl.startsWith("http://")) {
+                formattedUrl = "https://" + targetUrl;
+            }
+            window.location.href = `intent://${formattedUrl.replace('https://', '')}#Intent;scheme=https;package=com.android.chrome;end`;
+            // Резервный редирект, если intent не сработал
+            setTimeout(() => {
+                window.location.href = targetUrl;
+            }, 500);
+        };
+    </script>
+</body>
+</html>
