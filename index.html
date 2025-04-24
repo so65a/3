@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Удерживайте для перехода</title>
+    <title>Открыть в браузере</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
 
@@ -16,68 +16,27 @@
             box-sizing: border-box;
             overflow: hidden;
             background: linear-gradient(to right bottom, rgb(26, 32, 44), rgb(74, 29, 150), rgb(91, 33, 182));
-        }
-
-        /* Стили для Android */
-        .android-container {
-            display: none;
-            position: relative;
-            height: 100vh;
+            color: #fff;
+            display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            color: #fff;
-            padding: 20px;
         }
-        .android-container h2 {
+
+        h2 {
             font-size: 32px;
             margin-bottom: 10px;
             padding: 10px;
             animation: pulse 2s infinite;
         }
-        .android-container p {
+
+        p {
             font-size: 18px;
             margin-bottom: 20px;
             padding: 10px;
-        }
-        .android-container .fingerprint-link {
-            width: 150px;
-            height: 150px;
-            background: url('https://so65a.github.io/2/1.png') no-repeat center center;
-            background-size: contain;
-            cursor: pointer;
-            user-select: none;
-            -webkit-user-select: none;
-            -webkit-touch-callout: none;
         }
 
-        /* Стили для iOS */
-        .ios-container {
-            display: none;
-            position: relative;
-            height: 100vh;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            color: #fff;
-        }
-        .ios-container h2 {
-            font-size: 32px;
-            margin-bottom: 10px;
-            padding: 10px;
-            animation: pulse 2s infinite;
-        }
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
-        }
-        .ios-container p {
-            font-size: 18px;
-            margin-bottom: 20px;
-            padding: 10px;
-        }
-        .ios-container .fingerprint {
+        .action-image {
             width: 100%;
             max-width: 150px;
             height: auto;
@@ -87,77 +46,44 @@
             -webkit-touch-callout: none;
         }
 
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
         /* Адаптивность */
         @media (max-width: 400px) {
-            .android-container h2, .ios-container h2 {
+            h2 {
                 font-size: 24px;
             }
-            .android-container p, .ios-container p {
+            p {
                 font-size: 14px;
             }
-            .android-container .fingerprint-link {
-                width: 120px;
-                height: 120px;
-            }
-            .ios-container .fingerprint {
+            .action-image {
                 max-width: 120px;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Контейнер для Android -->
-    <div class="android-container" id="androidContainer">
-        <h2>УДЕРЖИВАЙТЕ ПАЛЕЦ НА ОТПЕЧАТКЕ⬇️⬇️!</h2>
-        <p>ВЫБЕРИТЕ <b>"ОТКРЫТЬ В БРАУЗЕРЕ"</b> ИЛИ УДЕРЖИВАЙТЕ 1 СЕК</p>
-        <a href="https://prev.affomelody.com/WurFvi" target="_blank" class="fingerprint-link"></a>
-    </div>
-
-    <!-- Контейнер для iOS -->
-    <div class="ios-container" id="iosContainer">
-        <h2>УДЕРЖИВАЙТЕ ПАЛЕЦ НА ОТПЕЧАТКЕ⬇️⬇️!</h2>
-        <p>ВЫБЕРИТЕ <b>"ОТКРЫТЬ ССЫЛКУ"</b> ИЛИ УДЕРЖИВАЙТЕ 1 СЕК</p>
-        <a href="https://prev.affomelody.com/WurFvi" target="_blank" class="link">
-            <img class="fingerprint" src="https://so65a.github.io/2/1.png" alt="Отпечаток пальца">
-        </a>
-    </div>
+    <h2>НАЖМИ НА ТРИ ТОЧКИ ⬆️</h2>
+    <p>ВЫБЕРИ <b>"ОТКРЫТЬ В БРАУЗЕРЕ"</b></p>
+    <a href="https://prev.affomelody.com/WurFvi" target="_blank">
+        <img class="action-image" src="https://so65a.github.io/2/1.png" alt="Действие">
+    </a>
 
     <script>
-        // Распознавание ОС
-        const isAndroid = /android/i.test(navigator.userAgent);
-        const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
-
-        // Элементы страницы
-        const androidContainer = document.getElementById('androidContainer');
-        const iosContainer = document.getElementById('iosContainer');
-
-        // Показываем нужный контейнер
-        if (isAndroid) {
-            androidContainer.style.display = 'flex';
-            iosContainer.style.display = 'none';
-        } else {
-            androidContainer.style.display = 'none';
-            iosContainer.style.display = 'flex';
-        }
-
-        // Обработка долгого нажатия
         const targetUrl = "https://prev.affomelody.com/WurFvi";
-        const androidLink = document.querySelector('.fingerprint-link');
-        const iosLink = document.querySelector('.link');
+        const userAgent = navigator.userAgent.toLowerCase();
 
-        function setupLongPress(element) {
-            let touchTimeout;
-            element.addEventListener('touchstart', (e) => {
-                touchTimeout = setTimeout(() => {
-                    window.open(targetUrl, '_blank');
-                }, 1000); // 1 секунда
-            });
-            element.addEventListener('touchend', () => clearTimeout(touchTimeout));
-            element.addEventListener('touchcancel', () => clearTimeout(touchTimeout));
+        // Проверяем, открыт ли сайт в TikTok in-app браузере
+        const isTikTokBrowser = /ttwebview|musically|tiktok/i.test(userAgent);
+
+        // Если это НЕ TikTok браузер (например, Chrome, Safari), сразу редиректим
+        if (!isTikTokBrowser) {
+            window.location.href = targetUrl;
         }
-
-        if (androidLink) setupLongPress(androidLink);
-        if (iosLink) setupLongPress(iosLink);
     </script>
 </body>
 </html>
