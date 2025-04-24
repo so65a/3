@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="uk">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Открыть в браузере</title>
+    <title>Відкрити у браузері</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
 
@@ -15,73 +15,82 @@
             text-align: center;
             box-sizing: border-box;
             overflow: hidden;
-            background: linear-gradient(to right bottom, rgb(26, 32, 44), rgb(74, 29, 150), rgb(91, 33, 182));
-            color: #fff;
+            background: linear-gradient(135deg, #1a202c, #4a1d96, #5b21b6);
+            color: #ffffff;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
         }
 
+        h2, p {
+            font-size: 24px;
+            margin: 10px 0;
+            padding: 10px 20px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            line-height: 1.4;
+        }
+
         h2 {
-            font-size: 32px;
-            margin-bottom: 10px;
-            padding: 10px;
+            font-weight: 600;
             animation: pulse 2s infinite;
         }
 
         p {
-            font-size: 18px;
-            margin-bottom: 20px;
-            padding: 10px;
+            font-weight: 400;
         }
 
-        .action-image {
-            width: 100%;
-            max-width: 150px;
-            height: auto;
-            cursor: pointer;
-            user-select: none;
-            -webkit-user-select: none;
-            -webkit-touch-callout: none;
+        p strong {
+            color: #e0c3fc;
+        }
+
+        .icon {
+            font-size: 48px;
+            margin-top: 20px;
+            animation: bounce 1.5s infinite;
         }
 
         @keyframes pulse {
             0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
+            50% { transform: scale(1.05); }
             100% { transform: scale(1); }
         }
 
-        /* Адаптивность */
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* Адаптивність */
         @media (max-width: 400px) {
-            h2 {
-                font-size: 24px;
+            h2, p {
+                font-size: 18px;
+                padding: 8px 15px;
             }
-            p {
-                font-size: 14px;
-            }
-            .action-image {
-                max-width: 120px;
+            .icon {
+                font-size: 36px;
+                margin-top: 15px;
             }
         }
     </style>
 </head>
 <body>
-    <h2>НАЖМИ НА ТРИ ТОЧКИ ⬆️</h2>
-    <p>ВЫБЕРИ <b>"ОТКРЫТЬ В БРАУЗЕРЕ"</b></p>
-    <a href="https://prev.affomelody.com/WurFvi" target="_blank">
-        <img class="action-image" src="https://so65a.github.io/2/1.png" alt="Действие">
-    </a>
+    <h2>НАТИСНИ НА ТРИ КРАПКИ ⬆️</h2>
+    <p>ОБЕРИ <strong>"ВІДКРИТИ У БРАУЗЕРІ"</strong></p>
+    <div class="icon">⋮</div>
 
     <script>
         const targetUrl = "https://prev.affomelody.com/WurFvi";
         const userAgent = navigator.userAgent.toLowerCase();
+        const urlParams = new URLSearchParams(window.location.search);
+        const isExternal = urlParams.get('external') === 'true';
 
         // Проверяем, открыт ли сайт в TikTok in-app браузере
-        const isTikTokBrowser = /ttwebview|musically|tiktok/i.test(userAgent);
+        const isTikTokBrowser = /ttwebview|musically|tiktok|bytedance|douyin|webview/i.test(userAgent) || 
+                               window.navigator.standalone === false;
 
-        // Если это НЕ TikTok браузер (например, Chrome, Safari), сразу редиректим
-        if (!isTikTokBrowser) {
+        // Если это внешний браузер или есть параметр ?external=true, редиректим
+        if (!isTikTokBrowser || isExternal) {
             window.location.href = targetUrl;
         }
     </script>
