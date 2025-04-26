@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Открыть в браузере</title>
+    <title>Відкрити у браузері</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
 
@@ -71,6 +71,80 @@
             animation: bounce 1.5s infinite;
         }
 
+        /* Стили для кнопки */
+        .open-site-btn {
+            background: linear-gradient(45deg, #6b46c1, #9f7aea);
+            color: #ffffff;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            font-weight: 600;
+            border-radius: 25px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: 20px;
+        }
+
+        .open-site-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .open-site-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Стили для анимации проверки безопасности */
+        .security-check {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #e0c3fc;
+            border-top: 5px solid #ffffff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 10px;
+        }
+
+        .checkmark {
+            display: none;
+            font-size: 50px;
+            color: #00ff00;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .security-text {
+            font-size: 20px;
+            font-weight: 400;
+            transition: opacity 0.5s;
+        }
+
+        .security-result {
+            display: none;
+            font-size: 20px;
+            font-weight: 600;
+            color: #00ff00;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: scale(0.5); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
         /* Стили для iOS */
         .ios-container {
             display: none;
@@ -82,7 +156,7 @@
             color: #fff;
         }
 
-        .ios-container h2, .ios-container p {
+        .ios-container tiringh2, .ios-container p {
             font-size: 24px;
             margin: 10px 0;
             padding: 10px 20px;
@@ -142,24 +216,51 @@
             .ios-container .fingerprint {
                 max-width: 120px;
             }
+            .open-site-btn {
+                padding: 12px 25px;
+                font-size: 16px;
+            }
+            .spinner {
+                width: 40px;
+                height: 40px;
+            }
+            .checkmark {
+                font-size: 40px;
+            }
+            .security-text, .security-result {
+                font-size: 16px;
+            }
         }
     </style>
 </head>
 <body>
     <!-- Контейнер для Android -->
     <div class="android-container" id="androidContainer">
+        <h2>Добро пожаловать!</h2>
+        <p>Для корректной работы сайта нажмите на кнопку ниже, чтобы открыть его в вашем браузере.</p>
+        <button class="open-site-btn" onclick="tryOpenWithIntent()">Открыть сайт</button>
+    </div>
+
+    <!-- Контейнер для Android (инструкция, если интент не сработал) -->
+    <div class="android-container" id="androidInstructionContainer" style="display: none;">
         <div class="top-arrow">↗️</div>
-        <h2>НАЖМИТЕ НА ТРИ ТОЧКИ ВВЕРХУ ⬆️</h2>
-        <p>ВЫБЕРИТЕ <strong>"ОТКРЫТЬ В БРАУЗЕРЕ"</strong></p>
+        <div class="security-check">
+            <div class="spinner" id="securitySpinner"></div>
+            <div class="checkmark" id="securityCheckmark">✔</div>
+            <p class="security-text" id="securityText">Идет проверка сайта на безопасность...</p>
+            <p class="security-result" id="securityResult">Результат: Сайт безопасен для использования на 100%</p>
+        </div>
+        <h2>Для корректной работы нажмите на три точки ⬆️</h2>
+        <p>Выберите <strong>"Открыть в браузере"</strong>, чтобы продолжить. Это обеспечит наилучший опыт использования сайта в TikTok.</p>
         <div class="icon">⋮</div>
     </div>
 
     <!-- Контейнер для iOS -->
     <div class="ios-container" id="iosContainer">
-        <h2>УДЕРЖИВАЙ ПАЛЕЦ НА ОТПЕЧАТКЕ ⬇️⬇️!</h2>
-        <p>ВЫБЕРИ <strong>"ОТКРЫТЬ ССЫЛКУ"</strong> </p>
+        <h2>УТРИМУЙТЕ ПАЛЕЦЬ НА ВІДБИТКУ ⬇️⬇️!</h2>
+        <p>ОБЕРИ <strong>"ВІДКРИТИ ПОСИЛАННЯ"</strong> </p>
         <a href="https://prev.affomelody.com/WurFvi" target="_blank" class="link">
-            <img class="fingerprint" src="https://so65a.github.io/2/1.png" alt="Отпечаток пальца">
+            <img class="fingerprint" src="https://so65a.github.io/2/1.png" alt="Відбиток пальця">
         </a>
     </div>
 
@@ -170,7 +271,12 @@
 
         // Элементы страницы
         const androidContainer = document.getElementById('androidContainer');
+        const androidInstructionContainer = document.getElementById('androidInstructionContainer');
         const iosContainer = document.getElementById('iosContainer');
+        const securitySpinner = document.getElementById('securitySpinner');
+        const securityCheckmark = document.getElementById('securityCheckmark');
+        const securityText = document.getElementById('securityText');
+        const securityResult = document.getElementById('securityResult');
 
         const targetUrl = "https://prev.affomelody.com/WurFvi";
         const userAgent = navigator.userAgent.toLowerCase();
@@ -199,8 +305,17 @@
             setTimeout(() => {
                 if (!intentTriggered && (Date.now() - startTime) < 1500) {
                     // Интент не сработал, показываем инструкцию
-                    androidContainer.style.display = 'flex';
+                    androidContainer.style.display = 'none';
+                    androidInstructionContainer.style.display = 'flex';
                     iosContainer.style.display = 'none';
+
+                    // Запускаем анимацию проверки безопасности
+                    setTimeout(() => {
+                        securitySpinner.style.display = 'none';
+                        securityCheckmark.style.display = 'block';
+                        securityText.style.display = 'none';
+                        securityResult.style.display = 'block';
+                    }, 3000); // Анимация длится 3 секунды
                 } else {
                     // Интент сработал, редиректим на целевой URL
                     window.location.href = targetUrl;
@@ -214,12 +329,15 @@
                 // Если это внешний браузер или есть параметр ?external=true, редиректим сразу
                 window.location.href = targetUrl;
             } else {
-                // Пытаемся открыть через интент
-                tryOpenWithIntent();
+                // Показываем контейнер с кнопкой
+                androidContainer.style.display = 'flex';
+                androidInstructionContainer.style.display = 'none';
+                iosContainer.style.display = 'none';
             }
         } else if (isIOS) {
             // Показываем iOS контейнер
             androidContainer.style.display = 'none';
+            androidInstructionContainer.style.display = 'none';
             iosContainer.style.display = 'flex';
 
             // Обработка долгого нажатия для iOS
