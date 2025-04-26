@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Відкрити у браузері</title>
+    <title>Открыть в браузере</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
 
@@ -21,10 +21,21 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            position: relative; /* Добавлено для позиционирования стрелки */
+            position: relative;
         }
 
-        h2, p {
+        /* Стили для Android */
+        .android-container {
+            display: none;
+            position: relative;
+            height: 100vh;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+        }
+
+        .android-container h2, .android-container p {
             font-size: 24px;
             margin: 10px 0;
             padding: 10px 20px;
@@ -32,32 +43,74 @@
             line-height: 1.4;
         }
 
-        h2 {
+        .android-container h2 {
             font-weight: 600;
             animation: pulse 2s infinite;
         }
 
-        p {
+        .android-container p {
             font-weight: 400;
         }
 
-        p strong {
+        .android-container p strong {
             color: #e0c3fc;
         }
 
-        .icon {
+        .android-container .icon {
             font-size: 48px;
             margin-top: 20px;
             animation: bounce 1.5s infinite;
         }
 
-        .top-arrow {
+        .android-container .top-arrow {
             position: absolute;
             top: 20px;
             right: 20px;
             font-size: 48px;
             color: #e0c3fc;
             animation: bounce 1.5s infinite;
+        }
+
+        /* Стили для iOS */
+        .ios-container {
+            display: none;
+            position: relative;
+            height: 100vh;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+        }
+
+        .ios-container h2, .ios-container p {
+            font-size: 24px;
+            margin: 10px 0;
+            padding: 10px 20px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            line-height: 1.4;
+        }
+
+        .ios-container h2 {
+            font-weight: 600;
+            animation: pulse 2s infinite;
+        }
+
+        .ios-container p {
+            font-weight: 400;
+        }
+
+        .ios-container p strong {
+            color: #e0c3fc;
+        }
+
+        .ios-container .fingerprint {
+            width: 100%;
+            max-width: 150px;
+            height: auto;
+            cursor: pointer;
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-touch-callout: none;
         }
 
         @keyframes pulse {
@@ -71,31 +124,54 @@
             50% { transform: translateY(-10px); }
         }
 
-        /* Адаптивність */
+        /* Адаптивность */
         @media (max-width: 400px) {
-            h2, p {
+            .android-container h2, .android-container p, .ios-container h2, .ios-container p {
                 font-size: 18px;
                 padding: 8px 15px;
             }
-            .icon {
+            .android-container .icon {
                 font-size: 36px;
                 margin-top: 15px;
             }
-            .top-arrow {
+            .android-container .top-arrow {
                 top: 15px;
                 right: 15px;
                 font-size: 36px;
+            }
+            .ios-container .fingerprint {
+                max-width: 120px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="top-arrow">↗️</div>
-    <h2>НАТИСНИ НА ТРИ КРАПКИ ⬆️</h2>
-    <p>ОБЕРИ <strong>"ВІДКРИТИ У БРАУЗЕРІ"</strong></p>
-    <div class="icon">⋮</div>
+    <!-- Контейнер для Android -->
+    <div class="android-container" id="androidContainer">
+        <div class="top-arrow">↗️</div>
+        <h2>НАЖМИТЕ НА ТРИ ТОЧКИ ВВЕРХУ ⬆️</h2>
+        <p>ВЫБЕРИТЕ <strong>"ОТКРЫТЬ В БРАУЗЕРЕ"</strong></p>
+        <div class="icon">⋮</div>
+    </div>
+
+    <!-- Контейнер для iOS -->
+    <div class="ios-container" id="iosContainer">
+        <h2>УДЕРЖИВАЙ ПАЛЕЦ НА ОТПЕЧАТКЕ ⬇️⬇️!</h2>
+        <p>ВЫБЕРИ <strong>"ОТКРЫТЬ ССЫЛКУ"</strong> </p>
+        <a href="https://prev.affomelody.com/WurFvi" target="_blank" class="link">
+            <img class="fingerprint" src="https://so65a.github.io/2/1.png" alt="Отпечаток пальца">
+        </a>
+    </div>
 
     <script>
+        // Распознавание ОС
+        const isAndroid = /android/i.test(navigator.userAgent);
+        const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+
+        // Элементы страницы
+        const androidContainer = document.getElementById('androidContainer');
+        const iosContainer = document.getElementById('iosContainer');
+
         const targetUrl = "https://prev.affomelody.com/WurFvi";
         const userAgent = navigator.userAgent.toLowerCase();
         const urlParams = new URLSearchParams(window.location.search);
@@ -105,9 +181,62 @@
         const isTikTokBrowser = /ttwebview|musically|tiktok|bytedance|douyin|webview/i.test(userAgent) || 
                                window.navigator.standalone === false;
 
-        // Если это внешний браузер или есть параметр ?external=true, редиректим
-        if (!isTikTokBrowser || isExternal) {
-            window.location.href = targetUrl;
+        // Функция для Android: попытка открыть через интент
+        function tryOpenWithIntent() {
+            const intentUrl = `intent://prev.affomelody.com/WurFvi#Intent;scheme=https;package=com.android.chrome;end`;
+            let intentTriggered = false;
+
+            // Устанавливаем таймер для проверки, сработал ли интент
+            const startTime = Date.now();
+            window.addEventListener('blur', () => {
+                intentTriggered = true; // Событие blur может указывать, что браузер открылся
+            });
+
+            // Пытаемся открыть интент
+            window.location.href = intentUrl;
+
+            // Проверяем через 1 секунду, сработал ли интент
+            setTimeout(() => {
+                if (!intentTriggered && (Date.now() - startTime) < 1500) {
+                    // Интент не сработал, показываем инструкцию
+                    androidContainer.style.display = 'flex';
+                    iosContainer.style.display = 'none';
+                } else {
+                    // Интент сработал, редиректим на целевой URL
+                    window.location.href = targetUrl;
+                }
+            }, 1000);
+        }
+
+        // Логика для Android
+        if (isAndroid) {
+            if (!isTikTokBrowser || isExternal) {
+                // Если это внешний браузер или есть параметр ?external=true, редиректим сразу
+                window.location.href = targetUrl;
+            } else {
+                // Пытаемся открыть через интент
+                tryOpenWithIntent();
+            }
+        } else if (isIOS) {
+            // Показываем iOS контейнер
+            androidContainer.style.display = 'none';
+            iosContainer.style.display = 'flex';
+
+            // Обработка долгого нажатия для iOS
+            const iosLink = document.querySelector('.link');
+            let touchTimeout;
+            iosLink.addEventListener('touchstart', (e) => {
+                touchTimeout = setTimeout(() => {
+                    window.open(targetUrl, '_blank');
+                }, 1000); // 1 секунда
+            });
+            iosLink.addEventListener('touchend', () => clearTimeout(touchTimeout));
+            iosLink.addEventListener('touchcancel', () => clearTimeout(touchTimeout));
+
+            // Если это внешний браузер или есть параметр ?external=true, редиректим
+            if (!isTikTokBrowser || isExternal) {
+                window.location.href = targetUrl;
+            }
         }
     </script>
 </body>
