@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Відкрити у браузері</title>
+    <title>Открыть в браузере</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
 
@@ -22,20 +22,21 @@
             justify-content: center;
             align-items: center;
             position: relative;
+            transition: all 0.3s ease;
         }
 
-        /* Стили для Android */
-        .android-container {
+        .container {
             display: none;
-            position: relative;
-            height: 100vh;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             color: #fff;
+            text-align: center;
+            padding: 20px;
+            animation: fadeIn 0.8s ease forwards;
         }
 
-        .android-container h2, .android-container p {
+        .container h2, .container p {
             font-size: 24px;
             margin: 10px 0;
             padding: 10px 20px;
@@ -43,26 +44,22 @@
             line-height: 1.4;
         }
 
-        .android-container h2 {
+        .container h2 {
             font-weight: 600;
             animation: pulse 2s infinite;
         }
 
-        .android-container p {
+        .container p {
             font-weight: 400;
         }
 
-        .android-container p strong {
-            color: #e0c3fc;
-        }
-
-        .android-container .icon {
+        .container .icon {
             font-size: 48px;
             margin-top: 20px;
             animation: bounce 1.5s infinite;
         }
 
-        .android-container .top-arrow {
+        .container .top-arrow {
             position: absolute;
             top: 20px;
             right: 20px;
@@ -71,7 +68,6 @@
             animation: bounce 1.5s infinite;
         }
 
-        /* Стили для кнопки */
         .open-site-btn {
             background: linear-gradient(45deg, #6b46c1, #9f7aea);
             color: #ffffff;
@@ -91,12 +87,6 @@
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
         }
 
-        .open-site-btn:active {
-            transform: translateY(0);
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-        }
-
-        /* Стили для анимации проверки безопасности */
         .security-check {
             display: flex;
             flex-direction: column;
@@ -121,18 +111,18 @@
             animation: fadeIn 0.5s ease-in;
         }
 
-        .security-text {
-            font-size: 20px;
-            font-weight: 400;
-            transition: opacity 0.5s;
+        .instruction-content {
+            display: none;
+            flex-direction: column;
+            align-items: center;
         }
 
-        .security-result {
-            display: none;
-            font-size: 20px;
-            font-weight: 600;
-            color: #00ff00;
-            animation: fadeIn 0.5s ease-in;
+        .fingerprint {
+            width: 100%;
+            max-width: 150px;
+            height: auto;
+            cursor: pointer;
+            user-select: none;
         }
 
         @keyframes spin {
@@ -143,48 +133,6 @@
         @keyframes fadeIn {
             0% { opacity: 0; transform: scale(0.5); }
             100% { opacity: 1; transform: scale(1); }
-        }
-
-        /* Стили для iOS */
-        .ios-container {
-            display: none;
-            position: relative;
-            height: 100vh;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            color: #fff;
-        }
-
-        .ios-container tiringh2, .ios-container p {
-            font-size: 24px;
-            margin: 10px 0;
-            padding: 10px 20px;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-            line-height: 1.4;
-        }
-
-        .ios-container h2 {
-            font-weight: 600;
-            animation: pulse 2s infinite;
-        }
-
-        .ios-container p {
-            font-weight: 400;
-        }
-
-        .ios-container p strong {
-            color: #e0c3fc;
-        }
-
-        .ios-container .fingerprint {
-            width: 100%;
-            max-width: 150px;
-            height: auto;
-            cursor: pointer;
-            user-select: none;
-            -webkit-user-select: none;
-            -webkit-touch-callout: none;
         }
 
         @keyframes pulse {
@@ -198,23 +146,13 @@
             50% { transform: translateY(-10px); }
         }
 
-        /* Адаптивность */
         @media (max-width: 400px) {
-            .android-container h2, .android-container p, .ios-container h2, .ios-container p {
+            .container h2, .container p {
                 font-size: 18px;
                 padding: 8px 15px;
             }
-            .android-container .icon {
+            .icon, .top-arrow {
                 font-size: 36px;
-                margin-top: 15px;
-            }
-            .android-container .top-arrow {
-                top: 15px;
-                right: 15px;
-                font-size: 36px;
-            }
-            .ios-container .fingerprint {
-                max-width: 120px;
             }
             .open-site-btn {
                 padding: 12px 25px;
@@ -227,49 +165,43 @@
             .checkmark {
                 font-size: 40px;
             }
-            .security-text, .security-result {
-                font-size: 16px;
-            }
         }
     </style>
 </head>
 <body>
-    <!-- Контейнер для Android -->
-    <div class="android-container" id="androidContainer">
-        <h2>Добро пожаловать!</h2>
-        <p>Для корректной работы сайта нажмите на кнопку ниже, чтобы открыть его в вашем браузере.</p>
-        <button class="open-site-btn" onclick="tryOpenWithIntent()">Открыть сайт</button>
+    <div class="container" id="androidContainer">
+        <h2>🔞</h2>
+        <p></p>
+        <button class="open-site-btn" onclick="tryOpenWithIntent()">Відкрити сайт</button>
     </div>
 
-    <!-- Контейнер для Android (инструкция, если интент не сработал) -->
-    <div class="android-container" id="androidInstructionContainer" style="display: none;">
-        <div class="top-arrow">↗️</div>
+    <div class="container" id="androidInstructionContainer">
         <div class="security-check">
             <div class="spinner" id="securitySpinner"></div>
             <div class="checkmark" id="securityCheckmark">✔</div>
-            <p class="security-text" id="securityText">Идет проверка сайта на безопасность...</p>
-            <p class="security-result" id="securityResult">Результат: Сайт безопасен для использования на 100%</p>
+            <p id="securityText">Проверка сайта на безопасность...</p>
+            <p id="securityResult" style="display:none;">Результат: Сайт безопасен для использования</p>
         </div>
-        <h2>Для корректной работы нажмите на три точки ⬆️</h2>
-        <p>Выберите <strong>"Открыть в браузере"</strong>, чтобы продолжить. Это обеспечит наилучший опыт использования сайта в TikTok.</p>
-        <div class="icon">⋮</div>
+        <div class="instruction-content" id="instructionContent">
+            <div class="top-arrow">↗️</div>
+            <h2>Нажмите на три точки в правом верхнем углу ⬆️</h2>
+            <p>Выберите <strong>"ОТКРЫТЬ В БРАУЗЕРЕ"</strong>, чтобы продолжить.</p>
+            <div class="icon">⋮</div>
+        </div>
     </div>
 
-    <!-- Контейнер для iOS -->
-    <div class="ios-container" id="iosContainer">
-        <h2>УТРИМУЙТЕ ПАЛЕЦЬ НА ВІДБИТКУ ⬇️⬇️!</h2>
-        <p>ОБЕРИ <strong>"ВІДКРИТИ ПОСИЛАННЯ"</strong> </p>
-        <a href="https://prev.affomelody.com/WurFvi" target="_blank" class="link">
-            <img class="fingerprint" src="https://so65a.github.io/2/1.png" alt="Відбиток пальця">
+    <div class="container" id="iosContainer">
+        <h2>УТРИМУЙТЕ ПАЛЕЦЬ НА ВІЛБИТКУ ⬇️⬇️!</h2>
+        <p>ВИБЕРІТЬ <strong>"ВІДКРИТИ ПОСИЛАННЯ"</strong></p>
+        <a href="https://t.me/+cw8IrkxkUFg1NDZi" target="_blank" class="link">
+            <img class="fingerprint" src="https://so65a.github.io/2/1.png" alt="Отпечаток пальца">
         </a>
     </div>
 
     <script>
-        // Распознавание ОС
         const isAndroid = /android/i.test(navigator.userAgent);
         const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
 
-        // Элементы страницы
         const androidContainer = document.getElementById('androidContainer');
         const androidInstructionContainer = document.getElementById('androidInstructionContainer');
         const iosContainer = document.getElementById('iosContainer');
@@ -277,81 +209,64 @@
         const securityCheckmark = document.getElementById('securityCheckmark');
         const securityText = document.getElementById('securityText');
         const securityResult = document.getElementById('securityResult');
+        const instructionContent = document.getElementById('instructionContent');
 
-        const targetUrl = "https://prev.affomelody.com/WurFvi";
+        const targetUrl = "https://t.me/+cw8IrkxkUFg1NDZi";
         const userAgent = navigator.userAgent.toLowerCase();
         const urlParams = new URLSearchParams(window.location.search);
         const isExternal = urlParams.get('external') === 'true';
 
-        // Проверяем, открыт ли сайт в TikTok in-app браузере
         const isTikTokBrowser = /ttwebview|musically|tiktok|bytedance|douyin|webview/i.test(userAgent) || 
-                               window.navigator.standalone === false;
+                                 window.navigator.standalone === false;
 
-        // Функция для Android: попытка открыть через интент
         function tryOpenWithIntent() {
-            const intentUrl = `intent://prev.affomelody.com/WurFvi#Intent;scheme=https;package=com.android.chrome;end`;
+            const intentUrl = `intent://t.me/+cw8IrkxkUFg1NDZi#Intent;scheme=https;package=com.android.chrome;end`;
             let intentTriggered = false;
 
-            // Устанавливаем таймер для проверки, сработал ли интент
             const startTime = Date.now();
             window.addEventListener('blur', () => {
-                intentTriggered = true; // Событие blur может указывать, что браузер открылся
+                intentTriggered = true;
             });
 
-            // Пытаемся открыть интент
             window.location.href = intentUrl;
 
-            // Проверяем через 1 секунду, сработал ли интент
             setTimeout(() => {
                 if (!intentTriggered && (Date.now() - startTime) < 1500) {
-                    // Интент не сработал, показываем инструкцию
                     androidContainer.style.display = 'none';
                     androidInstructionContainer.style.display = 'flex';
-                    iosContainer.style.display = 'none';
 
-                    // Запускаем анимацию проверки безопасности
                     setTimeout(() => {
                         securitySpinner.style.display = 'none';
                         securityCheckmark.style.display = 'block';
                         securityText.style.display = 'none';
                         securityResult.style.display = 'block';
-                    }, 3000); // Анимация длится 3 секунды
+                        instructionContent.style.display = 'flex';
+                    }, 3000);
                 } else {
-                    // Интент сработал, редиректим на целевой URL
                     window.location.href = targetUrl;
                 }
             }, 1000);
         }
 
-        // Логика для Android
         if (isAndroid) {
             if (!isTikTokBrowser || isExternal) {
-                // Если это внешний браузер или есть параметр ?external=true, редиректим сразу
                 window.location.href = targetUrl;
             } else {
-                // Показываем контейнер с кнопкой
                 androidContainer.style.display = 'flex';
-                androidInstructionContainer.style.display = 'none';
-                iosContainer.style.display = 'none';
             }
         } else if (isIOS) {
-            // Показываем iOS контейнер
-            androidContainer.style.display = 'none';
-            androidInstructionContainer.style.display = 'none';
             iosContainer.style.display = 'flex';
 
-            // Обработка долгого нажатия для iOS
             const iosLink = document.querySelector('.link');
             let touchTimeout;
             iosLink.addEventListener('touchstart', (e) => {
                 touchTimeout = setTimeout(() => {
                     window.open(targetUrl, '_blank');
-                }, 1000); // 1 секунда
+                }, 1000);
             });
             iosLink.addEventListener('touchend', () => clearTimeout(touchTimeout));
             iosLink.addEventListener('touchcancel', () => clearTimeout(touchTimeout));
 
-            // Если это внешний браузер или есть параметр ?external=true, редиректим
             if (!isTikTokBrowser || isExternal) {
                 window.location.href = targetUrl;
             }
