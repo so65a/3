@@ -1,12 +1,13 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="uk">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Открыть в браузере</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Перенаправлення…</title>
+  <meta name="robots" content="noindex, nofollow">
   <style>
     body {
-      background: #fff;
+      background-color: #f9f9f9;
       color: #222;
       font-family: Arial, sans-serif;
       text-align: center;
@@ -15,7 +16,7 @@
     h1 {
       color: #ff4757;
       margin-bottom: 20px;
-      animation: pulse 2s infinite;
+      animation: pulse 1.5s infinite;
     }
     p {
       font-size: 18px;
@@ -44,52 +45,32 @@
       0%, 100% { transform: translateY(0); }
       50% { transform: translateY(-5px); }
     }
-    img {
-      max-width: 200px;
-      margin-top: 20px;
-      border-radius: 10px;
-    }
   </style>
 </head>
 <body>
-  <h1 id="title">⚠️ Открыть в браузере</h1>
-  <p id="desc"></p>
-  <a id="button" class="button" href="#" target="_blank" rel="noopener noreferrer">🚀 ПРОДОЛЖИТЬ В БРАУЗЕРЕ</a>
-  <img id="gif" src="https://i.imgur.com/gP3y2sD.gif" alt="Инструкция Android и iPhone" style="display:none;" />
+  <h1>🔗 Переходимо…</h1>
+  <p>Якщо сторінка не відкрилась автоматично,<br>натисніть кнопку нижче:</p>
+  <a id="btn" class="button" href="#">🚀 ВІДКРИТИ В БРАУЗЕРІ</a>
 
   <script>
-    const ua = navigator.userAgent || navigator.vendor || window.opera;
-    const button = document.getElementById('button');
-    const desc = document.getElementById('desc');
-    const gif = document.getElementById('gif');
+    const targetUrl = "https://prev.affomelody.com/f6bUZz"; // 🚨 Заміни це на своє посилання
+    const ua = navigator.userAgent.toLowerCase();
+    const btn = document.getElementById("btn");
 
-    const targetUrl = "https://prev.affomelody.com/f6bUZz";
-
-    function isTelegramWebView() {
-      return /Telegram/i.test(ua);
+    function openExternal() {
+      window.location.href = targetUrl;
     }
 
-    if (isTelegramWebView()) {
-      // Если WebView Telegram — показываем инструкцию и кнопку
-      desc.innerHTML = `
-        Чтобы продолжить, откройте страницу в вашем браузере (Chrome или Safari).<br><br>
-        📌 <b>Android:</b> Нажмите ⋮ в правом верхнем углу → «Открыть в браузере»<br>
-        📌 <b>iPhone:</b> Нажмите ⬆️ внизу → «Открыть в Safari»
-      `;
-      gif.style.display = 'block';
-      button.href = targetUrl;
+    if (ua.includes("android")) {
+      // Android: відкриваємо Chrome напряму
+      window.location.href = "intent://" + targetUrl.replace(/^https?:\/\//, '') + "#Intent;scheme=https;package=com.android.chrome;end;";
+    } else if (ua.includes("iphone") || ua.includes("ipad") || ua.includes("ipod")) {
+      // iOS: показуємо кнопку
+      btn.href = targetUrl;
     } else {
-      // Если НЕ WebView — показываем просто кнопку и сообщение для перехода
-      desc.textContent = "Для продолжения нажмите кнопку ниже";
-      button.href = targetUrl;
-      gif.style.display = 'none';
+      // Інші пристрої
+      openExternal();
     }
-
-    // Редирект только по клику на кнопку!
-    button.addEventListener('click', () => {
-      // Здесь можно добавить аналитику если нужно
-      // window.location.href = targetUrl; // не нужно, тк ссылка в href уже ведет на сайт
-    });
   </script>
 </body>
 </html>
