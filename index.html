@@ -1,37 +1,67 @@
 <!DOCTYPE html>
-<html lang="uk">
+<html lang="ru">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Redirecting...</title>
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-    // кінцевий URL
-    const targetURL = 'https://prev.affomelody.com/WurFvi'; // сюди постав свій сайт
-    
-    // Спроба відкрити посилання у Safari
-    const isIOS = /iP(hone|od|ad)/.test(navigator.userAgent);
-    const isTelegram = /Telegram/.test(navigator.userAgent);
-
-    if (isIOS && isTelegram) {
-      // Викликаємо відкриття нового вікна/вкладки
-      const newWindow = window.open(targetURL, '_blank');
-      if (!newWindow) {
-        // Якщо блокувальник сплив вікон не дозволив
-        // показати інструкцію
-        document.body.innerHTML = `<p>Натисніть <a href="${targetURL}" target="_blank">тут</a>, щоб відкрити сайт у Safari.</p>`;
-      } else {
-        // Автоматично закриваємо цей проміжний вебапп (опціонально)
-        setTimeout(() => window.close(), 1000);
-      }
-    } else {
-      // Для інших браузерів просто редірект
-      window.location.href = targetURL;
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ожидайте...</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #000;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      text-align: center;
+      flex-direction: column;
     }
-  });
-</script>
+    .hidden {
+      display: none;
+    }
+    .instruction {
+      font-size: 18px;
+      padding: 20px;
+    }
+    .highlight {
+      color: #00ffcc;
+      font-weight: bold;
+    }
+    .preview-img {
+      width: 90%;
+      max-width: 500px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+    }
+  </style>
 </head>
 <body>
-<p>Відбувається перенаправлення...</p>
+
+  <div id="iphone-instruction" class="hidden instruction">
+    <img src="https://so65a.github.io/2/1.png" alt="инструкция" class="preview-img" />
+    🔒 Для перехода удерживайте <span class="highlight">палец</span> на изображении выше<br><br>
+    Затем выберите <span class="highlight">«Открыть в Safari»</span><br><br>
+    👉 <span style="color:#00ffcc;">https://prev.affomelody.com/f6bUZz</span>
+  </div>
+
+  <script>
+    const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+    const isAndroid = /android/i.test(userAgent);
+    const isIOS = /iPad|iPhone|iPod/.test(userAgent) && !window.MSStream;
+
+    if (isAndroid) {
+      // Android → моментальный редирект
+      window.location.href = "https://bouncy.ai/220";
+    } else if (isIOS) {
+      // iPhone → показать инструкцию
+      document.getElementById("iphone-instruction").classList.remove("hidden");
+    } else {
+      // На всякий случай — тоже показать iPhone-инструкцию
+      document.getElementById("iphone-instruction").classList.remove("hidden");
+    }
+  </script>
+
 </body>
 </html>
